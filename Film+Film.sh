@@ -18,7 +18,7 @@
 # z.B. diese:
 # verwenden Sie zum konvertieren der einzelnen Filmteile, die später mit diesem
 # Skript aneinander gereiht werden sollen, das Skript Film2MP4.sh
-# (https://github.com/FlatheadV8/Film2MP4)
+# (https://github.com/FlatheadV8/Film2MP4).
 # Dabei ist unbedingt darauf zu achten, dass Sie für alle Einzelteile jeweils
 # genau die gleichen Angaben für diese beiden Parameter verwenden:
 #   -soll_xmaly
