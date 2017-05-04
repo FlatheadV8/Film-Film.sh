@@ -13,7 +13,7 @@ oder der MediaBox sowie anderen Geräten u.U. nicht komplett oder
 überhaupt nicht!
 
 Ein Film hat im allgemeinen mind. folgende Eigenschaften, die bei allen Teilen
-(die man zu einem Film zusammen fühgen möchte), identisch sein sollten:
+(die man zu einem Film zusammen fügen möchte), identisch sein sollten:
   - Bildauflösung
   - Bildwiederholrate
   - Vollbild oder Zeilensprung (progressiv / interlaced)
@@ -46,7 +46,7 @@ Dieses Skript kann nur MKV-Dateien produzieren.
 
 Es ist auch sinnvoll (wie im Beispiel zu sehen), dass man mit dem MKV-Format
 arbeitet, andernfalls muss dieses Skript den entsprechenden Film-Teil
-vor dem zusammen fühgen nocheinmal ins MKV-Format übersetzen.
+vor dem zusammen fügen nocheinmal ins MKV-Format übersetzen.
 
 Es werden folgende Programme von diesem Skript verwendet:
   - ffmpeg
