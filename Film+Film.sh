@@ -34,7 +34,7 @@
 #
 # Es ist auch sinnvoll (wie im Beispiel zu sehen), dass man mit dem MKV-Format
 # arbeitet, andernfalls muss dieses Skript den entsprechenden Film-Teil
-# vor dem zusammen fühgen nocheinmal ins MKV-Format übersetzen.
+# vor dem zusammen fügen nocheinmal ins MKV-Format übersetzen.
 #
 # Es werden folgende Programme von diesem Skript verwendet:
 #  - ffmpeg
