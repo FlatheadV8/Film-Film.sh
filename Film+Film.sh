@@ -44,7 +44,7 @@
 
 #set -x
 
-VERSION="v2017050400"
+VERSION="v2017050500"
 
 #set -x
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -100,11 +100,11 @@ do
 				MKV_NEU="${FILMDATEI}"
                 		;;
         		*)
-				# ${PROGRAMM} -fflags +genpts ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${NAME_NEU}.mkv
+				# ${PROGRAMM} -fflags +genpts -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${NAME_NEU}.mkv
 				echo "
-				${PROGRAMM} ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${FILMDATEI}.mkv
+				${PROGRAMM} -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${FILMDATEI}.mkv
 				"
-				${PROGRAMM} ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${FILMDATEI}.mkv
+				${PROGRAMM} -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${FILMDATEI}.mkv
                 		shift
 
 				MKV_NEU="${FILMDATEI}.mkv"
