@@ -44,7 +44,7 @@
 
 #set -x
 
-VERSION="v2017050500"
+VERSION="v2017050501"
 
 #set -x
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -107,6 +107,7 @@ do
 				${PROGRAMM} -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${FILMDATEI}.mkv
                 		shift
 
+				MKV_TEMP="${MKV_TEMP} ${FILMDATEI}.mkv"
 				MKV_NEU="${FILMDATEI}.mkv"
                 		;;
 		esac
@@ -128,5 +129,6 @@ mkvmerge -o ${NAME_NEU}.mkv ${FILM_TEILE}
 
 #------------------------------------------------------------------------------#
 
+rm -fv ${MKV_TEMP}
 ls -lh ${NAME_NEU}.mkv ${NAME_NEU}.txt
 exit
