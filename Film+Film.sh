@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 #------------------------------------------------------------------------------#
-#
+
+#if [ "$1" = "-h" | "$1" = "-H" | "$1" = "-help" | "$1" = "-HELP" ] ; then
+if [ "$1" = '-h' ] ; then
+
+echo "#
 # Mit diesem Skript kann man mehrere Filmteile aneinander reihen.
 # Allerdings sollte man darauf achten, dass alle Teile zueinander kompatibel
 # sind, sonst kann es beim abspielen zu Problemen kommen.
@@ -24,27 +28,41 @@
 #   -soll_xmaly
 #   -dar
 # zum Beispiel würde man für 3 Teile dieses tun:
-#   ~/bin/Film2MP4.sh -soll_xmaly 1920x1080 -dar 16:9 -q 1.avi -z 1.mkv
-#   ~/bin/Film2MP4.sh -soll_xmaly 1920x1080 -dar 16:9 -q 2.avi -z 2.mkv
-#   ~/bin/Film2MP4.sh -soll_xmaly 1920x1080 -dar 16:9 -q 3.avi -z 3.mkv
-#   ~/bin/Film+Film.sh komplett 1.mkv 2.mkv 3.mkv
+#   ~/bin/Film2MP4.sh -soll_xmaly 1920x1080 -dar 16:9 -q 1.avi -z 1.mp4
+#   ~/bin/Film2MP4.sh -soll_xmaly 1920x1080 -dar 16:9 -q 2.avi -z 2.mp4
+#   ~/bin/Film2MP4.sh -soll_xmaly 1920x1080 -dar 16:9 -q 3.avi -z 3.mp4
+#   ~/bin/Film+Film.sh komplett 1.mp4 2.mp4 3.mp4
 #
 # Der fertige Film, aus diesem Beispiel, hat am Ende den Namen "komplett.mkv".
 # Dieses Skript kann nur MKV-Dateien produzieren.
 #
-# Es ist auch sinnvoll (wie im Beispiel zu sehen), dass man mit dem MKV-Format
-# arbeitet, andernfalls muss dieses Skript den entsprechenden Film-Teil
-# vor dem zusammen fügen nocheinmal ins MKV-Format übersetzen.
+# Es ist auch sinnvoll , dass man mit dem MKV-Format arbeitet,
+# andernfalls muss dieses Skript den entsprechenden Film-Teil
+# vor dem zusammenfügen ersteinmal ins MKV-Format übersetzen (das ist aber nicht schlimm).
+#
+# Wichtig zu sagen an dieser Stelle ist auch, dass Filme, die mit libx264
+# erzeugt wurden werden beim zusammenfühgen keine Probleme verursachen, Filme
+# die mit dem (von FF) internen Codec h264 erzeugt wurden, können nach dem
+# zusammenfühgen unbrauchbare Ergebnisse erzielen!
 #
 # Es werden folgende Programme von diesem Skript verwendet:
 #  - ffmpeg
 #  - mkvmerge (aus dem Paket mkvtoolnix)
 #
+
+Beispiel:
+> ${0} Filmfertig [Filmteil1.mp4] [Filmteil2.mp4] [Filmteil3.mp4]
+"
+exit 2
+
+fi
+
 #------------------------------------------------------------------------------#
 
 #set -x
 
-VERSION="v2017050501"
+#VERSION="v2017050501"
+VERSION="v2018082600"
 
 #set -x
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -55,7 +73,7 @@ LANG=C		# damit AWK richtig rechnet
 
 if [ -z "$1" ] ; then
 	echo "${0} Filmfertig [Filmteil1.mp4] [Filmteil2.mp4] [Filmteil3.mp4]"
-	exi 1
+	exit 1
 fi
 
 AUFRUF="${0} $@"
@@ -129,6 +147,6 @@ mkvmerge -o ${NAME_NEU}.mkv ${FILM_TEILE}
 
 #------------------------------------------------------------------------------#
 
-rm -fv ${MKV_TEMP}
+rm -v ${MKV_TEMP}
 ls -lh ${NAME_NEU}.mkv ${NAME_NEU}.txt
 exit
