@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
+#VERSION="v2017050501"
+#VERSION="v2018082600"
+VERSION="v2019082700"
+
 #------------------------------------------------------------------------------#
 
-#if [ "$1" = "-h" | "$1" = "-H" | "$1" = "-help" | "$1" = "-HELP" ] ; then
-if [ "$1" = '-h' ] ; then
-
+hilfe()
+{
 echo "#
 # Mit diesem Skript kann man mehrere Filmteile aneinander reihen.
 # Allerdings sollte man darauf achten, dass alle Teile zueinander kompatibel
 # sind, sonst kann es beim abspielen zu Problemen kommen.
+#
+# Es ist darauf zu achten, dass diese Filmteile mindestens die gleiche
+# Bildschirmauflösung, Bildwiederholrate und Codecs besitzen.
+# Die Filmteile müssen auch in ihren Audio-Spuren gleichviele Kanäle haben.
+# Zum Beispiel sollten alle Stereo (2) oder Dolby (6) haben.
+# Beides gemischt geht nicht.
 #
 # Mit diesem Skript kann man gewaltigen Ausschuss produzieren, der auf dem
 # ersten Blick nicht einmal auffällt!!!
@@ -53,27 +62,33 @@ echo "#
 Beispiel:
 > ${0} Filmfertig [Filmteil1.mp4] [Filmteil2.mp4] [Filmteil3.mp4]
 "
-exit 2
+}
 
+#------------------------------------------------------------------------------#
+
+if [ -e "$1" ] ; then
+        hilfe
+        exit 2
+fi
+
+if [ "x$3" == x ] ; then
+        hilfe
+        exit 2
 fi
 
 #------------------------------------------------------------------------------#
 
-#set -x
-
-#VERSION="v2017050501"
-VERSION="v2018082600"
 
 #set -x
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-LANG=C		# damit AWK richtig rechnet
+LANG=C          # damit AWK richtig rechnet
 
 #==============================================================================#
 
 if [ -z "$1" ] ; then
-	echo "${0} Filmfertig [Filmteil1.mp4] [Filmteil2.mp4] [Filmteil3.mp4]"
-	exit 1
+        echo "${0} Filmfertig [Filmteil1.mp4] [Filmteil2.mp4] [Filmteil3.mp4]"
+        exit 1
 fi
 
 AUFRUF="${0} $@"
@@ -105,34 +120,34 @@ unset MKV_TEILE
 
 for FILMDATEI in ${FILM_TEILE}
 do
-	echo "-> ${FILMDATEI}"
+        echo "-> ${FILMDATEI}"
 
-	if [ ! -r "${FILMDATEI}" ] ; then
-        	echo "Der Film '${FILMDATEI}' konnte nicht gefunden werden. Abbruch!"
-        	exit 1
-	else
-		case "${FILMDATEI}" in
-        		[a-zA-Z0-9\_\-\+/][a-zA-Z0-9\_\-\+/]*[.][Mm][Kk][Vv])
-                		shift
+        if [ ! -r "${FILMDATEI}" ] ; then
+                echo "Der Film '${FILMDATEI}' konnte nicht gefunden werden. Abbruch!"
+                exit 1
+        else
+                case "${FILMDATEI}" in
+                        [a-zA-Z0-9\_\-\+/][a-zA-Z0-9\_\-\+/]*[.][Mm][Kk][Vv])
+                                shift
 
-				MKV_NEU="${FILMDATEI}"
-                		;;
-        		*)
-				# ${PROGRAMM} -fflags +genpts -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${NAME_NEU}.mkv
-				echo "
-				${PROGRAMM} -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${FILMDATEI}.mkv
-				"
-				${PROGRAMM} -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${FILMDATEI}.mkv
-                		shift
+                                MKV_NEU="${FILMDATEI}"
+                                ;;
+                        *)
+                                # ${PROGRAMM} -fflags +genpts -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${NAME_NEU}.mkv
+                                echo "
+                                ${PROGRAMM} -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${FILMDATEI}.mkv
+                                "
+                                ${PROGRAMM} -i ${FILMDATEI} -c:v copy -c:a copy -f matroska -y ${FILMDATEI}.mkv
+                                shift
 
-				MKV_TEMP="${MKV_TEMP} ${FILMDATEI}.mkv"
-				MKV_NEU="${FILMDATEI}.mkv"
-                		;;
-		esac
+                                MKV_TEMP="${MKV_TEMP} ${FILMDATEI}.mkv"
+                                MKV_NEU="${FILMDATEI}.mkv"
+                                ;;
+                esac
 
-		MKV_TEILE="${MKV_TEILE} ${MKV_NEU}"
-		unset MKV_NEU
-	fi
+                MKV_TEILE="${MKV_TEILE} ${MKV_NEU}"
+                unset MKV_NEU
+        fi
 done
 
 #==============================================================================#
@@ -147,6 +162,13 @@ mkvmerge -o ${NAME_NEU}.mkv ${FILM_TEILE}
 
 #------------------------------------------------------------------------------#
 
+for A in ${MKV_TEMP}
+do
+        echo "${A} -> $(mediainfo ${A} | egrep '^Channel[(]s[)]' | sed 's/  */ /g')"
+done
 rm -v ${MKV_TEMP}
+
+echo
+
 ls -lh ${NAME_NEU}.mkv ${NAME_NEU}.txt
 exit
